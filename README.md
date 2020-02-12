@@ -1,6 +1,6 @@
 Java Threads task for course ID202812 Operatingsystems @ NTNU
 
-##The task
+The task
 
 A university computer science department has a teaching assistant (TA) who helps undergraduate students
 with their programming assignments during regular office hours. The TA’s office is rather small and has room
