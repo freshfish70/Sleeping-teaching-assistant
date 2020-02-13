@@ -21,10 +21,12 @@ public class StudentQueue<Student> implements Queue<Student> {
      * @param element student to add to queue
      */
     @Override
-    public synchronized void push(Student element) {
-        if (this.queue.size() <= this.maxQueueSize) {
+    public synchronized boolean push(Student element) {
+        if (this.queue.size() < this.maxQueueSize) {
             this.queue.add(element);
+            return true;
         }
+        return false;
     }
 
     /**

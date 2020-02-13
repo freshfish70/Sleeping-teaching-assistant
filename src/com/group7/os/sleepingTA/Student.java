@@ -1,16 +1,9 @@
 package com.group7.os.sleepingTA;
 
-import java.util.Random;
-
 public class Student extends Thread {
 
-    //Wake SA if is sleeping
-
-    //Go back to work if queue is full
-
-    //Wait in queue if the que is not full
-
-    //Go back to work when has gotten help
+    private final int MINIMUM_WORK_DURATION = 1000;
+    private final int MAXIMUM_WORK_DURATION = 3000;
 
     private StudentAssistant studentAssistant;
 
@@ -21,60 +14,76 @@ public class Student extends Thread {
     public Student(StudentAssistant studentAssistant, StudentQueue queue) {
         this.studentAssistant = studentAssistant;
         this.queue = queue;
-
     }
 
-    private int random() {
-        double randomDouble = Math.random();
-        randomDouble = randomDouble * 6000 + 1000;
-        int randomInt = (int) randomDouble;
-        return randomInt;
+    /**
+     * Returns a random time between a minimum and maximum work duration; milliseconds
+     *
+     * @return value between minimum and maximum work duration; milliseconds
+     */
+    private int getWorkTime() {
+        return (int) (Math.random() * ((MAXIMUM_WORK_DURATION - MINIMUM_WORK_DURATION) + 1)) + MINIMUM_WORK_DURATION;
     }
 
-    private synchronized void work() {
+    /**
+     * Sleeps for a random time, and check if needs help.
+     */
+    private void work() {
         try {
-            int sleeptime = random();
-            System.out.println("Student " + this.getId() + "works for: " + sleeptime);
-            sleep(sleeptime);
+            while (!needHelp()) {
+                int sleeptime = getWorkTime();
+                log("Student " + this.getId() + " works for: " + sleeptime + "ms");
+                sleep(sleeptime);
+            }
+            log("Student " + this.getId() + " is in need for help...");
         } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
+    /**
+     * Change for needing help
+     *
+     * @return true of needing help else false
+     */
+    private boolean needHelp() {
+        return Math.random() < 0.2;
+    }
+
+    /**
+     * Called by the TA when he has given help to the student.
+     */
     public synchronized void giveHelp() {
-        System.out.println("Student " + this.getId() + " is helped");
+        log("Student " + this.getId() + " is helped");
         this.isWaitingForHelp = false;
         notifyAll();
     }
 
     private synchronized void waitingForHelp() {
         try {
-            System.out.println("Student " + this.getId() + " is waiting for help...");
+            this.isWaitingForHelp = true;
             while (this.isWaitingForHelp) {
                 wait();
             }
+            log("Student " + this.getId() + " returning to work...");
         } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-        System.out.println("Student " + this.getId() + " stopped waiting for help...");
-
     }
 
-    private synchronized void process() {
+    @Override
+    public void run() {
         while (true) {
-            this.studentAssistant.wakeIfAsleep((int)this.getId());
 
-            if (!this.queue.isFull()) {
-                this.queue.push(this);
-                this.isWaitingForHelp = true;
+            if (this.studentAssistant.canEnterOffice(this)) {
+                this.waitingForHelp();
+            } else if (this.queue.push(this)) {
+                log("Student " + this.getId() + " is in queue and waiting for help...");
                 this.waitingForHelp();
             }
             work();
         }
     }
 
-    @Override
-    public void run() {
-        this.process();
+    private void log(String message) {
+        System.out.println(message);
     }
 }

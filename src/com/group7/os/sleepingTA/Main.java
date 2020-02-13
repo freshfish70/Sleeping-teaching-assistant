@@ -2,19 +2,25 @@ package com.group7.os.sleepingTA;
 
 public class Main {
 
+    /**
+     * Hoe many students allowed to wait for help
+     */
+    private static final int MAX_QUEUE_SIZE = 3;
+    /**
+     * Number of students to create
+     */
+    private static final int STUDENTS_IN_CLASS = 10;
+
     public static void main(String[] args) {
 
-//        Student a = new Student();
-        StudentQueue<Student> q = new StudentQueue(3);
-        StudentAssistant a = new StudentAssistant(q);
-        a.start();
+        StudentQueue<Student> queue = new StudentQueue(MAX_QUEUE_SIZE);
+        StudentAssistant studentAssistant = new StudentAssistant(queue);
+        studentAssistant.start();
 
-        for (int i = 0; i < 10; i++) {
-            Student e = new Student(a, q);
-            e.id(i);
+        for (int i = 0; i < STUDENTS_IN_CLASS; i++) {
+            Student e = new Student(studentAssistant, queue);
             e.start();
         }
-
 
     }
 
