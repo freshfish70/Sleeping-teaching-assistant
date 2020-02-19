@@ -13,7 +13,7 @@ public class StudentAssistant extends Thread {
      */
     private Queue<Student> queue;
 
-    private boolean isAsleep = true;
+    private boolean isAsleep = false;
 
     private Student helpingStudent = null;
 
@@ -28,7 +28,6 @@ public class StudentAssistant extends Thread {
         try {
             this.isAsleep = true;
             while (isAsleep) {
-                this.isAsleep = false;
                 this.log("Student assistant is sleeping...");
                 wait();
             }
@@ -43,10 +42,10 @@ public class StudentAssistant extends Thread {
      * @return true if can enter, else false
      */
     public synchronized boolean canEnterOffice(Student student) {
-        if (this.helpingStudent != null) return false;
+        if (this.helpingStudent != null && !this.isAsleep) return false;
         this.isAsleep = false;
         this.helpingStudent = student;
-        notifyAll();
+        notify();
         return true;
     }
 
@@ -59,12 +58,10 @@ public class StudentAssistant extends Thread {
         try {
             this.helpingStudent = null;
             this.log("Helping student " + student.getId());
-            sleep((int) Math.random() * 5000 + 100);
+            sleep((int) Math.random() * 7000 + 1000);
             student.giveHelp();
         } catch (InterruptedException e) {
         }finally {
-
-
         }
     }
 
@@ -80,12 +77,19 @@ public class StudentAssistant extends Thread {
         return student;
     }
 
+    /**
+     * If there we are not currently helping a student, try get a new one from the queue
+     */
+    private void checkHallway(){
+        if (this.helpingStudent == null) this.helpingStudent = this.getNextInQueue();
+    }
+
     @Override
     public void run() {
         while (true) {
             while (this.helpingStudent != null) {
                 this.helpStudent(this.helpingStudent);
-                this.helpingStudent = this.getNextInQueue();
+                this.checkHallway();
             }
             this.log("There are no one in the queue...");
             this.takeNap();

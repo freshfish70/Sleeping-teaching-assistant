@@ -30,11 +30,11 @@ public class Student extends Thread {
      */
     private void work() {
         try {
-            while (!needHelp()) {
+            do {
                 int sleeptime = getWorkTime();
                 log("Student " + this.getId() + " works for: " + sleeptime + "ms");
                 sleep(sleeptime);
-            }
+            } while (!needHelp());
             log("Student " + this.getId() + " is in need for help...");
         } catch (InterruptedException e) {
         }
@@ -46,7 +46,7 @@ public class Student extends Thread {
      * @return true of needing help else false
      */
     private boolean needHelp() {
-        return Math.random() < 0.2;
+        return Math.random() < .7;
     }
 
     /**
@@ -62,6 +62,7 @@ public class Student extends Thread {
         try {
             this.isWaitingForHelp = true;
             while (this.isWaitingForHelp) {
+                System.out.println(this.getId() + " is waiting for help......................");
                 wait();
             }
             log("Student " + this.getId() + " returning to work...");
