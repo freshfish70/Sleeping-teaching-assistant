@@ -4,6 +4,8 @@ public class Student extends Thread {
 
     private final int MINIMUM_WORK_DURATION = 1000;
     private final int MAXIMUM_WORK_DURATION = 3000;
+    private final float CHANCE_FOR_HELP = 0.5f;
+    private final float CHANCE_FOR_GOING_HOME = 0.3f;
 
     private StudentAssistant studentAssistant;
 
@@ -41,12 +43,22 @@ public class Student extends Thread {
     }
 
     /**
-     * Change for needing help
+     * Returns true of we got a chance, lower or equal value than provided.
      *
-     * @return true of needing help else false
+     * @param chance the chance, between 0 and 1
+     * @return true if random value is lower or equal else false
+     */
+    private boolean isChance(float chance) {
+        return Math.random() <= chance;
+    }
+
+    /**
+     * Returns true if we need help.
+     *
+     * @return true if needing help
      */
     private boolean needHelp() {
-        return Math.random() < .2;
+        return isChance(this.CHANCE_FOR_HELP);
     }
 
     /**
@@ -70,9 +82,13 @@ public class Student extends Thread {
         }
     }
 
+    private boolean wantToGoHome() {
+        return isChance(CHANCE_FOR_GOING_HOME);
+    }
+
     @Override
     public void run() {
-        while (true) {
+        do {
             work();
             if (this.studentAssistant.canEnterOffice(this)) {
                 System.out.println("TA was not busy, entered office");
@@ -82,6 +98,8 @@ public class Student extends Thread {
                 this.waitingForHelp();
             }
         }
+        while (!wantToGoHome());
+        System.out.println(this.getId() + " is going home...");
     }
 
     private void log(String message) {

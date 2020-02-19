@@ -17,6 +17,8 @@ public class StudentAssistant extends Thread {
 
     private Student helpingStudent = null;
 
+    private boolean leave = false;
+
     public StudentAssistant(Queue<Student> queue) {
         this.queue = queue;
     }
@@ -83,17 +85,27 @@ public class StudentAssistant extends Thread {
         this.helpingStudent = this.getNextInQueue();
     }
 
+    /**
+     * Flags the TA to leave, and wake him up from sleep.
+     */
+    public synchronized void leave(){
+        this.helpingStudent = null;
+        this.leave = true;
+        this.isAsleep = false;
+        notifyAll();
+    }
+
     @Override
     public void run() {
-        while (true) {
+        while (!leave) {
             while (this.helpingStudent != null) {
                 this.helpStudent(this.helpingStudent);
                 this.checkHallway();
             }
             this.log("There are no one in the queue...");
             this.takeNap();
-
         }
+        System.out.println("TA is leaving work...");
     }
 
     private void log(String message) {
