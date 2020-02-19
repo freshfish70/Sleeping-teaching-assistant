@@ -46,7 +46,7 @@ public class Student extends Thread {
      * @return true of needing help else false
      */
     private boolean needHelp() {
-        return Math.random() < .7;
+        return Math.random() < .2;
     }
 
     /**
@@ -73,14 +73,14 @@ public class Student extends Thread {
     @Override
     public void run() {
         while (true) {
-
+            work();
             if (this.studentAssistant.canEnterOffice(this)) {
+                System.out.println("TA was not busy, entered office");
                 this.waitingForHelp();
             } else if (this.queue.push(this)) {
                 log("Student " + this.getId() + " is in queue and waiting for help...");
                 this.waitingForHelp();
             }
-            work();
         }
     }
 

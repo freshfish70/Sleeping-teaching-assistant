@@ -56,7 +56,6 @@ public class StudentAssistant extends Thread {
      */
     private void helpStudent(Student student) {
         try {
-            this.helpingStudent = null;
             this.log("Helping student " + student.getId());
             sleep((int) Math.random() * 7000 + 1000);
             student.giveHelp();
@@ -81,7 +80,7 @@ public class StudentAssistant extends Thread {
      * If there we are not currently helping a student, try get a new one from the queue
      */
     private void checkHallway(){
-        if (this.helpingStudent == null) this.helpingStudent = this.getNextInQueue();
+        this.helpingStudent = this.getNextInQueue();
     }
 
     @Override
