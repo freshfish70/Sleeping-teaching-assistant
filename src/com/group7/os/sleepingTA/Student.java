@@ -74,7 +74,7 @@ public class Student extends Thread {
         try {
             this.isWaitingForHelp = true;
             while (this.isWaitingForHelp) {
-                System.out.println(this.getId() + " is waiting for help......................");
+                log(this.getId() + " is waiting for help......................");
                 wait();
             }
             log("Student " + this.getId() + " returning to work...");
@@ -91,7 +91,7 @@ public class Student extends Thread {
         do {
             work();
             if (this.studentAssistant.canEnterOffice(this)) {
-                System.out.println("TA was not busy, entered office");
+                log("TA was not busy, entered office");
                 this.waitingForHelp();
             } else if (this.queue.push(this)) {
                 log("Student " + this.getId() + " is in queue and waiting for help...");
@@ -99,7 +99,7 @@ public class Student extends Thread {
             }
         }
         while (!wantToGoHome());
-        System.out.println(this.getId() + " is going home...");
+        log(this.getId() + " is going home...");
     }
 
     private void log(String message) {

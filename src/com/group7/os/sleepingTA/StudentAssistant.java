@@ -105,7 +105,7 @@ public class StudentAssistant extends Thread {
             this.log("There are no one in the queue...");
             this.takeNap();
         }
-        System.out.println("TA is leaving work...");
+        this.log("TA is leaving work...");
     }
 
     private void log(String message) {
