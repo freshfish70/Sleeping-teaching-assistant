@@ -1,0 +1,10 @@
+package no.hials.page.replacement;
+
+public class App {
+
+
+    public static void main(String[] args){
+        OptimalReplacement or = new OptimalReplacement();
+        or.process("7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1");
+    }
+}
