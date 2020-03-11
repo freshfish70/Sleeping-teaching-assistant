@@ -7,12 +7,9 @@ import java.util.List;
  */
 public class OptimalReplacement extends ReplacementAlgorithm {
 
-    // TODO - add some state variables here, if you need any
-
     @Override
     protected void reset() {
         System.out.println("reset");
-        // TODO - do preparation/initilization here, if needed
     }
 
     @Override
@@ -22,7 +19,6 @@ public class OptimalReplacement extends ReplacementAlgorithm {
             return 0;
 
         int replacements = 0; // How many page replacements made
-        int maxFrames = this.frames.length;
 
         for (int i = 0; i < pageReferences.size(); i++) {
             int newPage = pageReferences.get(i);
@@ -32,20 +28,11 @@ public class OptimalReplacement extends ReplacementAlgorithm {
 
             if (!pageInserted) {
                 boolean pageIsInStack = isPageInFramesStack(newPage);
-
                 if (!pageIsInStack) {
                     this.tryReplacePage(nextReferenceIndex, newPage, pageReferences);
                 }
-
             }
-            // System.out.println(newPage);
-            StringBuilder b = new StringBuilder();
-            for (int j = 0; j < maxFrames; j++) {
-                b.append("FRAME:  ");
-                b.append(frames[j]);
-                b.append("  :  ");
-            }
-            System.out.println(b.toString());
+            printCurrentFrame();
         }
 
         return replacements;
@@ -137,6 +124,17 @@ public class OptimalReplacement extends ReplacementAlgorithm {
         return false;
     }
 
-    // TODO - create any helper methods here if you need any
+    /**
+     *
+     */
+    private void printCurrentFrame(){
+        StringBuilder sb = new StringBuilder();
+        for (int j = 0; j < this.frames.length; j++) {
+            sb.append("FRAME:  ");
+            sb.append(frames[j]);
+            sb.append("  :  ");
+        }
+        System.out.println(sb.toString());
+    }
 
 }
