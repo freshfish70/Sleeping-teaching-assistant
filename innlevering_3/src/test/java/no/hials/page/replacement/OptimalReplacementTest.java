@@ -28,6 +28,12 @@ public class OptimalReplacementTest {
 
         OptimalReplacement best = new OptimalReplacement();
 
+       /** This unit thest checks that the pageReplacement
+        * algorithm does the corrent number of replacement pages.
+        * We calculated the result on paper, first, and then
+        * assert that the alogrithm will do eqaul replacements
+        */
+
         best.setup(3);
         String pages = "3,7,2,0,1,5,9,3,4,2,4,9,7,3";
         int pageReplacements = best.process(pages);
