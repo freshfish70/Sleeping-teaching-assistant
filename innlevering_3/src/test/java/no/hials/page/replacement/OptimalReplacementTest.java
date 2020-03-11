@@ -25,6 +25,15 @@ public class OptimalReplacementTest {
         assertEquals("7, 0, 1", frameStatus);
 
         // TODO - add additional Unit tests here
+
+        OptimalReplacement best = new OptimalReplacement();
+
+        best.setup(3);
+        String pages = "3,7,2,0,1,5,9,3,4,2,4,9,7,3";
+        int pageReplacements = best.process(pages);
+        String pageFrameStatus = best.getFrameStatus();
+        assertEquals(7,pageReplacements);
     }
-   
+
+
 }

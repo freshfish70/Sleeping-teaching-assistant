@@ -30,6 +30,7 @@ public class OptimalReplacement extends ReplacementAlgorithm {
                 boolean pageIsInStack = isPageInFramesStack(newPage);
                 if (!pageIsInStack) {
                     this.tryReplacePage(nextReferenceIndex, newPage, pageReferences);
+                    replacements++;
                 }
             }
             printCurrentFrame();
